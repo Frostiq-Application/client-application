@@ -1,0 +1,26 @@
+/** Copy for the cart feature. */
+
+export const CART_COPY = {
+  TITLE: "Cart",
+  EMPTY_TITLE: "Your cart is empty",
+  EMPTY_DESC: "Sweet things are waiting — add something you love.",
+  BROWSE: "Browse cakes",
+  SUBTOTAL: "Subtotal",
+  ITEM_TOTAL: "Item total",
+  EXTRAS_TOTAL: "Extras",
+  VIEW_BREAKUP: "View breakup",
+  DELIVERY_NOTE: "Delivery & offers are applied at checkout",
+  TOTAL: "Grand total",
+  CHECKOUT: "Checkout",
+  CHECKOUT_SOON: "Checkout arrives with the next module",
+  BRANCH_REPLACED: "Cart cleared — items were from another branch",
+  VIEW_CART: "View Cart",
+  ITEM: "item",
+  ITEMS: "items",
+  EXTRAS: "Extras",
+  SWIPE_HINT: "Swipe left, then tap the bin to remove",
+  ADD: "Add",
+  EXTRAS_TITLE: "Make it special",
+  EXTRAS_FOR: "Add extras for",
+  NO_EXTRAS: "This branch has no add-ons yet.",
+} as const;
