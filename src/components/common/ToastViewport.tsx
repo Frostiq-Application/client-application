@@ -20,7 +20,7 @@ export function ToastViewport() {
   const toasts = useToastStore((s) => s.toasts);
 
   return (
-    <div className="pointer-events-none absolute inset-x-0 bottom-24 z-[60] flex flex-col items-center gap-2 px-4">
+    <div className="pointer-events-none absolute inset-x-0 bottom-24 z-[60] flex flex-col items-center gap-2 px-4 md:bottom-10">
       <AnimatePresence>
         {toasts.map((t) => {
           const Icon = TONE_ICON[t.tone];

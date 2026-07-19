@@ -27,6 +27,22 @@ export function useBrand(geo?: GeoPoint) {
 }
 
 /**
+ * Storefront feature flags for this brand (custom cake, WhatsApp checkout).
+ * Absent on older backends → every flag reads false, so the app keeps its
+ * default behaviour.
+ */
+export function useBrandFeatures(): {
+  customCake: boolean;
+  whatsappCheckout: boolean;
+} {
+  const { data: brand } = useBrand();
+  return {
+    customCake: brand?.features?.can_use_custom_cake ?? false,
+    whatsappCheckout: brand?.features?.can_use_whatsapp_checkout ?? false,
+  };
+}
+
+/**
  * The customer's active branch: persisted choice, self-healing when the
  * branch disappears, defaulting to the first branch for single-outlet brands.
  */

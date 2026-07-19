@@ -38,6 +38,19 @@ const AddressesPage = lazy(() =>
 const WishlistPage = lazy(() =>
   import("@/pages/WishlistPage").then((m) => ({ default: m.WishlistPage })),
 );
+const CustomCakePage = lazy(() =>
+  import("@/pages/CustomCakePage").then((m) => ({ default: m.CustomCakePage })),
+);
+const CustomCakeRequestsPage = lazy(() =>
+  import("@/pages/CustomCakeRequestsPage").then((m) => ({
+    default: m.CustomCakeRequestsPage,
+  })),
+);
+const CustomCakeRequestDetailPage = lazy(() =>
+  import("@/pages/CustomCakeRequestDetailPage").then((m) => ({
+    default: m.CustomCakeRequestDetailPage,
+  })),
+);
 
 function withSuspense(node: React.ReactNode) {
   return <Suspense fallback={<LoadingScreen />}>{node}</Suspense>;
@@ -65,6 +78,15 @@ const router = createBrowserRouter([
       { path: ROUTES.ORDER_DETAIL, element: withSuspense(<OrderDetailPage />) },
       { path: ROUTES.ADDRESSES, element: withSuspense(<AddressesPage />) },
       { path: ROUTES.WISHLIST, element: withSuspense(<WishlistPage />) },
+      { path: ROUTES.CUSTOM_CAKE, element: withSuspense(<CustomCakePage />) },
+      {
+        path: ROUTES.CUSTOM_CAKE_REQUESTS,
+        element: withSuspense(<CustomCakeRequestsPage />),
+      },
+      {
+        path: ROUTES.CUSTOM_CAKE_REQUEST_DETAIL,
+        element: withSuspense(<CustomCakeRequestDetailPage />),
+      },
       { path: ROUTES.NOT_FOUND, element: withSuspense(<NotFoundPage />) },
     ],
   },

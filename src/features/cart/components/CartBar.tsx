@@ -26,7 +26,7 @@ export function CartBar() {
           exit={{ y: 90, opacity: 0, transition: { duration: 0.18 } }}
           whileTap={tapScale}
           onClick={() => navigate(ROUTES.CART)}
-          className="absolute inset-x-4 bottom-[84px] z-40 flex h-[52px] items-center justify-between rounded-full bg-primary px-5 text-primary-foreground shadow-fab lg:inset-x-auto lg:right-8 lg:w-80"
+          className="absolute inset-x-4 bottom-[84px] z-40 flex h-[52px] items-center justify-between rounded-full bg-primary px-5 text-primary-foreground shadow-fab md:inset-x-auto md:bottom-8 md:right-8 md:w-80"
         >
           <span className="flex items-center gap-2 text-sm font-bold">
             <ShoppingBag className="h-4.5 w-4.5" strokeWidth={2.4} />

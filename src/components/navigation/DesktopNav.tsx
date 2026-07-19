@@ -9,8 +9,8 @@ import { cn } from "@/lib/cn";
 import { IOS_SPRING } from "@/animations/variants";
 
 /**
- * Top navigation for laptop/desktop (lg+). Replaces the bottom tab bar:
- * brand identity on the left, the four destinations on the right.
+ * Top navigation for tablet/laptop/desktop (md+). Replaces the bottom tab
+ * bar: brand identity on the left, the four destinations on the right.
  */
 export function DesktopNav() {
   const { pathname } = useLocation();
@@ -18,8 +18,8 @@ export function DesktopNav() {
   const { data: brand } = useBrand();
 
   return (
-    <header className="blur-surface sticky top-0 z-40 hidden shrink-0 border-b border-border/60 lg:block">
-      <div className="mx-auto flex h-16 w-full max-w-5xl items-center justify-between px-6">
+    <header className="blur-surface sticky top-0 z-40 hidden shrink-0 border-b border-border/60 md:block">
+      <div className="mx-auto flex h-16 w-full max-w-3xl items-center justify-between px-6 lg:max-w-5xl xl:max-w-6xl">
         <button
           type="button"
           onClick={() => navigate(ROUTES.HOME)}

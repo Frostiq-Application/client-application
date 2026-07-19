@@ -15,6 +15,20 @@ export const API_ENDPOINTS = {
     `/storefront/branches/${shopId}/products/${productId}`,
   wishlistTrack: (shopId: string) => `/storefront/branches/${shopId}/wishlist/track`,
 
+  // Custom cake ordering (add-on module)
+  customCakeOptions: (shopId: string) =>
+    `/storefront/branches/${shopId}/custom-cake/options`,
+  customCakeRequests: (shopId: string) =>
+    `/storefront/branches/${shopId}/custom-cake/requests`,
+  customCakeRequest: (shopId: string, id: string) =>
+    `/storefront/branches/${shopId}/custom-cake/requests/${id}`,
+  customCakeRequestEvents: (shopId: string, id: string) =>
+    `/storefront/branches/${shopId}/custom-cake/requests/${id}/events`,
+  customCakeRespond: (shopId: string, id: string) =>
+    `/storefront/branches/${shopId}/custom-cake/requests/${id}/respond`,
+  customCakeUpload: (shopId: string) =>
+    `/storefront/branches/${shopId}/custom-cake/upload`,
+
   // Customer auth + profile
   googleLogin: "/storefront/auth/google",
   me: "/storefront/auth/me",

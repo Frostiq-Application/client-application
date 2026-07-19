@@ -170,7 +170,7 @@ export function CheckoutPage() {
     <>
       <TopBar back title={CHECKOUT_COPY.TITLE} />
       <Page className="bg-muted/40">
-        <PageSection className="space-y-3.5 pb-6 pt-3">
+        <PageSection className="mx-auto w-full space-y-3.5 pb-6 pt-3 md:max-w-2xl">
           {/* Savings banner (reference: Blinkit "Your total savings") */}
           {discount > 0 && (
             <motion.div
@@ -395,7 +395,7 @@ export function CheckoutPage() {
       </Page>
 
       {/* Place order — opens the confirmation sheet */}
-      <div className="border-t border-border/60 bg-background/95 px-4 pb-4 pt-3 backdrop-blur">
+      <div className="mx-auto w-full border-t border-border/60 bg-background/95 px-4 pb-4 pt-3 backdrop-blur md:max-w-2xl md:rounded-t-3xl md:border-x md:px-6">
         <Button
           block
           size="lg"

@@ -29,6 +29,11 @@ export interface Branch {
   distanceKm: number | null;
 }
 
+export interface BrandFeatures {
+  can_use_custom_cake: boolean;
+  can_use_whatsapp_checkout: boolean;
+}
+
 export interface Brand {
   accountId: string;
   /** Tenant id (schema name) of this brand. */
@@ -38,7 +43,98 @@ export interface Brand {
   logoUrl: string | null;
   themeColor: string | null;
   isActive: boolean;
+  /** Storefront-relevant plan flags (absent on older backends → treat as off). */
+  features?: BrandFeatures;
   branches: Branch[];
+}
+
+// ---- Custom cake ordering (add-on module) ----
+
+export type CustomCakeStatus =
+  | "submitted"
+  | "under_review"
+  | "quotation_sent"
+  | "accepted"
+  | "rejected"
+  | "preparing"
+  | "ready"
+  | "delivered"
+  | "cancelled";
+
+/** Option lists for the request form, grouped by field key. */
+export type CustomCakeOptions = Record<string, { id: string; label: string }[]>;
+
+export interface CustomCakeRequestInput {
+  guestId?: string;
+  contactName: string;
+  contactPhone: string;
+  contactEmail?: string;
+  cakeType?: string;
+  weight?: string;
+  shape?: string;
+  theme?: string;
+  occasion?: string;
+  sponge?: string;
+  cream?: string;
+  filling?: string;
+  flavour?: string;
+  colour?: string;
+  decorations?: string[];
+  topper?: string;
+  cakeMessage?: string;
+  referenceImageUrls?: string[];
+  deliveryType: DeliveryType;
+  neededDate?: string;
+  neededTime?: string;
+  deliveryAddress?: string;
+  notes?: string;
+  specialInstructions?: string;
+  allergyInfo?: string;
+}
+
+export interface CustomCakeRequest {
+  id: string;
+  requestNumber: string;
+  shopId: string;
+  status: CustomCakeStatus;
+  contactName: string;
+  contactPhone: string;
+  cakeType: string | null;
+  weight: string | null;
+  shape: string | null;
+  theme: string | null;
+  occasion: string | null;
+  sponge: string | null;
+  cream: string | null;
+  filling: string | null;
+  flavour: string | null;
+  colour: string | null;
+  decorations: string[];
+  topper: string | null;
+  cakeMessage: string | null;
+  referenceImageUrls: string[];
+  deliveryType: DeliveryType;
+  neededDate: string | null;
+  neededTime: string | null;
+  deliveryAddress: string | null;
+  notes: string | null;
+  specialInstructions: string | null;
+  allergyInfo: string | null;
+  quotedPrice: string | null;
+  resolutionReason: string | null;
+  convertedOrderId: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** One entry of a request's status-history timeline (customer-visible). */
+export interface CustomCakeEvent {
+  id: string;
+  requestId: string;
+  status: CustomCakeStatus;
+  note: string | null;
+  changedBy: string | null;
+  changedAt: string;
 }
 
 // ---- Catalog ----

@@ -12,10 +12,17 @@ import { CartItemRow } from "@/features/cart/components/CartItemRow";
 import { AuthSheet } from "@/features/auth/components/AuthSheet";
 import { useAuthStore } from "@/store/authStore";
 import { CART_COPY } from "@/features/cart/constants";
-import { lineAddonsTotal, useCartStore, useCartSubtotal } from "@/store/cartStore";
+import {
+  lineAddonsTotal,
+  lineTotal,
+  useCartStore,
+  useCartSubtotal,
+} from "@/store/cartStore";
 import { toast } from "@/store/toastStore";
 import { TOAST } from "@/constants/toast.constants";
 import { ROUTES, buildPath } from "@/routes/paths";
+import { useBrand, useBrandFeatures, useSelectedBranch } from "@/hooks/useStorefront";
+import { openWhatsApp, buildOrderMessage } from "@/lib/whatsapp";
 import { formatCurrency } from "@/utils/format";
 import { STORAGE_KEYS } from "@/constants/app.constants";
 
@@ -31,6 +38,10 @@ export function CartPage() {
   const extrasTotal = items.reduce((sum, i) => sum + lineAddonsTotal(i), 0);
   const itemsTotal = subtotal - extrasTotal;
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const customer = useAuthStore((s) => s.customer);
+  const { data: brand } = useBrand();
+  const { branch } = useSelectedBranch();
+  const { whatsappCheckout } = useBrandFeatures();
 
   // First-visit hint: show the swipe-to-remove tip + demo nudge once.
   const [showHint, setShowHint] = useState(
@@ -41,7 +52,41 @@ export function CartPage() {
     setShowHint(false);
   };
 
+  // WhatsApp checkout hand-off (Golden Cakes add-on). When the brand has the
+  // flag, the checkout button opens WhatsApp with the order pre-filled instead
+  // of the in-app checkout — no separate payment step. Guests included, since
+  // the order is completed over WhatsApp, not in-app.
+  const checkoutViaWhatsApp = () => {
+    const number = branch?.whatsappNumber;
+    if (!number) {
+      toast.error("This store hasn't set up WhatsApp ordering yet.");
+      return;
+    }
+    openWhatsApp(
+      number,
+      buildOrderMessage({
+        brandName: brand?.name ?? "Order",
+        branchName: branch?.branchName,
+        items: items.map((l) => ({
+          name: l.name,
+          variantLabel: l.variantLabel,
+          flavorName: l.flavorName,
+          quantity: l.quantity,
+          lineTotal: lineTotal(l),
+          addons: l.addons.map((a) => ({ name: a.name, quantity: a.quantity })),
+        })),
+        subtotal,
+        customerName: customer?.name,
+        customerPhone: customer?.phone,
+      }),
+    );
+  };
+
   const goCheckout = () => {
+    if (whatsappCheckout) {
+      checkoutViaWhatsApp();
+      return;
+    }
     if (isAuthenticated) {
       navigate(ROUTES.CHECKOUT);
     } else {
@@ -74,7 +119,7 @@ export function CartPage() {
     <>
       <TopBar back title={CART_COPY.TITLE} />
       <Page>
-        <PageSection className="pt-3">
+        <PageSection className="mx-auto w-full pt-3 md:max-w-2xl">
           {showHint && (
             <motion.div
               initial={{ opacity: 0, y: -8 }}
@@ -119,7 +164,7 @@ export function CartPage() {
       </Page>
 
       {/* Totals + checkout (reference: grand total + collapsible "View breakup") */}
-      <div className="border-t border-border/60 bg-background/95 px-4 pb-4 pt-3 backdrop-blur">
+      <div className="mx-auto w-full border-t border-border/60 bg-background/95 px-4 pb-4 pt-3 backdrop-blur md:max-w-2xl md:rounded-t-3xl md:border-x md:px-6">
         <div className="rounded-3xl bg-violet-400/15 p-4 dark:bg-violet-500/15">
           <div className="flex items-center justify-between">
             <p className="text-sm font-semibold text-muted-foreground">{CART_COPY.TOTAL}</p>
@@ -174,7 +219,7 @@ export function CartPage() {
           onClick={goCheckout}
           className="mt-3 rounded-full bg-gradient-to-r from-primary to-primary/75 text-base shadow-fab"
         >
-          {CART_COPY.CHECKOUT}
+          {whatsappCheckout ? "Order on WhatsApp" : CART_COPY.CHECKOUT}
         </Button>
       </div>
 

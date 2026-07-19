@@ -71,7 +71,7 @@ export function AddressesPage() {
             }
           />
         ) : (
-          <PageSection className="space-y-3 pb-8 pt-2">
+          <PageSection className="mx-auto w-full space-y-3 pb-8 pt-2 md:max-w-2xl">
             {addresses.map((a) => (
               <div key={a.id} className="rounded-3xl bg-surface p-4 shadow-card">
                 <div className="flex items-center gap-2">

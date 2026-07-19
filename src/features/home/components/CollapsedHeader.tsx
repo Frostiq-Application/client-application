@@ -29,7 +29,7 @@ export function CollapsedHeader({ visible, branch, onBranchTap }: CollapsedHeade
           exit={{ y: -88, opacity: 0, transition: EASE_OUT }}
           className="blur-surface absolute inset-x-0 top-0 z-30 border-b border-border/60 shadow-sm"
         >
-          <div className="mx-auto w-full px-4 pb-2.5 pt-2 lg:max-w-5xl lg:px-6">
+          <div className="mx-auto w-full px-4 pb-2.5 pt-2 md:max-w-3xl md:px-6 lg:max-w-5xl xl:max-w-6xl">
             <button
               type="button"
               onClick={onBranchTap}

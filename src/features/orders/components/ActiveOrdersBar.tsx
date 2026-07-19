@@ -61,8 +61,11 @@ export function ActiveOrdersBar() {
   const visible = isAuthenticated && active.length > 0 && pathname === ROUTES.HOME;
   const latest = active[0];
 
-  // Stack above the CartBar (bottom-[84px]) when it's showing.
-  const bottomClass = cartCount > 0 ? "bottom-[148px]" : "bottom-[84px]";
+  // Stack above the CartBar (bottom-[84px]) when it's showing. On md+ the
+  // bottom tab bar is gone and the CartBar docks bottom-right, so this bar
+  // docks bottom-left at a fixed offset instead.
+  const bottomClass =
+    cartCount > 0 ? "bottom-[148px] md:bottom-8" : "bottom-[84px] md:bottom-8";
 
   return (
     <AnimatePresence>
@@ -71,7 +74,7 @@ export function ActiveOrdersBar() {
           initial={{ y: 90, opacity: 0 }}
           animate={{ y: 0, opacity: 1, transition: IOS_SPRING }}
           exit={{ y: 90, opacity: 0, transition: { duration: 0.18 } }}
-          className={`absolute inset-x-4 z-40 ${bottomClass} lg:inset-x-auto lg:left-8 lg:w-96`}
+          className={`absolute inset-x-4 z-40 ${bottomClass} md:inset-x-auto md:left-8 md:w-96`}
         >
           <AnimatePresence initial={false}>
             {expanded && (

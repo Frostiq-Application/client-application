@@ -14,7 +14,7 @@ export function BottomNav() {
   return (
     <nav
       aria-label="Primary"
-      className="blur-surface z-40 shrink-0 border-t border-border/60 pb-safe-bottom lg:hidden"
+      className="blur-surface z-40 shrink-0 border-t border-border/60 pb-safe-bottom md:hidden"
     >
       <div className="flex h-[64px] items-stretch px-2">
         {BOTTOM_NAV.map((item) => {

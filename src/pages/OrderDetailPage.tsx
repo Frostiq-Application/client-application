@@ -108,7 +108,7 @@ export function OrderDetailPage() {
     <>
       <TopBar back title={order.orderNumber} />
       <Page className="bg-muted/40">
-        <PageSection className="space-y-4 pb-10 pt-3">
+        <PageSection className="mx-auto w-full space-y-4 pb-10 pt-3 md:max-w-2xl">
           {/* Hero: animated illustration + playful status copy */}
           <div
             className={cn(

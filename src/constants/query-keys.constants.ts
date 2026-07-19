@@ -25,4 +25,11 @@ export const QK = {
 
   slots: (shopId: string, date: string) => ["slots", shopId, date] as const,
   availableDates: (shopId: string) => ["available-dates", shopId] as const,
+
+  customCakeOptions: (shopId: string) => ["custom-cake", "options", shopId] as const,
+  customCakeRequests: (shopId: string) => ["custom-cake", "requests", shopId] as const,
+  customCakeRequest: (shopId: string, id: string) =>
+    ["custom-cake", "request", shopId, id] as const,
+  customCakeEvents: (shopId: string, id: string) =>
+    ["custom-cake", "events", shopId, id] as const,
 } as const;

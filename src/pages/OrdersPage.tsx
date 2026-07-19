@@ -57,7 +57,7 @@ export function OrdersPage() {
             action={<Button onClick={() => navigate(ROUTES.HOME)}>Browse cakes</Button>}
           />
         ) : (
-          <PageSection className="pb-8 pt-2">
+          <PageSection className="mx-auto w-full pb-8 pt-2 md:max-w-2xl">
             <motion.div variants={listContainer} initial="initial" animate="animate" className="space-y-3">
               {orders.map((order) => (
                 <motion.button

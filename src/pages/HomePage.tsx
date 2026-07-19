@@ -9,6 +9,7 @@ import {
   useAnnouncement,
   useBanners,
   useBrand,
+  useBrandFeatures,
   useCatalog,
   usePublicCoupons,
   useSelectedBranch,
@@ -30,11 +31,13 @@ import { HomeSkeleton } from "@/features/home/components/HomeSkeleton";
 import { ProductCard } from "@/features/home/components/ProductCard";
 import { SectionHeader } from "@/features/home/components/SectionHeader";
 import { HOME_COPY } from "@/features/home/constants";
+import { CustomCakeCard } from "@/features/custom-cake/components/CustomCakeCard";
 
 export function HomePage() {
   const navigate = useNavigate();
   const brandQuery = useBrand();
   const { branch, needsSelection } = useSelectedBranch();
+  const { customCake } = useBrandFeatures();
   const shopId = branch?.id ?? null;
 
   const catalogQuery = useCatalog(shopId);
@@ -125,6 +128,12 @@ export function HomePage() {
             <div className="pt-2">
               <BannerCarousel banners={bannersQuery.data ?? []} />
             </div>
+
+            {customCake && (
+              <div className="pt-2">
+                <CustomCakeCard />
+              </div>
+            )}
 
             {(couponsQuery.data?.length ?? 0) > 0 && (
               <>

@@ -88,7 +88,7 @@ export function Sheet({
               // instead of overflowing the clipped panel — otherwise tall
               // content can't scroll.
               "relative z-10 flex max-h-[88%] flex-col overflow-hidden rounded-t-[1.75rem] bg-surface shadow-sheet",
-              "lg:mb-10 lg:w-full lg:max-w-md lg:self-center lg:rounded-[1.75rem]",
+              "md:mb-10 md:w-full md:max-w-md md:self-center md:rounded-[1.75rem]",
               className,
             )}
           >

@@ -31,7 +31,7 @@ export function HomeHeader({ brand, branch, onBranchTap }: HomeHeaderProps) {
   const displayName = customer?.name ?? brand?.name ?? APP.NAME;
 
   return (
-    <div className="px-4 pb-3 pt-3 lg:px-6 lg:pt-5">
+    <div className="px-4 pb-3 pt-3 md:pt-5">
       <div className="flex items-center gap-3">
         <motion.button
           type="button"
@@ -67,7 +67,7 @@ export function HomeHeader({ brand, branch, onBranchTap }: HomeHeaderProps) {
         </CircleAction>
       </div>
 
-      <div className="mt-3.5 flex items-center gap-2 lg:max-w-xl">
+      <div className="mt-3.5 flex items-center gap-2 md:max-w-xl">
         <RotatingSearchBar onTap={() => navigate(ROUTES.SEARCH)} className="flex-1" />
         <motion.button
           type="button"

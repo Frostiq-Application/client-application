@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MapPin, Moon, Info, LogIn, LogOut, Heart } from "lucide-react";
+import { MapPin, Moon, Info, LogIn, LogOut, Heart, CakeSlice } from "lucide-react";
 import { TopBar } from "@/components/navigation/TopBar";
 import { Page, PageSection } from "@/components/layouts/Page";
 import { ListGroup, ListItem } from "@/components/ui/List";
@@ -10,6 +10,7 @@ import { AuthSheet } from "@/features/auth/components/AuthSheet";
 import { AUTH_COPY } from "@/features/auth/constants";
 import { useAuthStore } from "@/store/authStore";
 import { useWishlistCount } from "@/store/wishlistStore";
+import { useBrandFeatures } from "@/hooks/useStorefront";
 import { useThemeStore } from "@/store/themeStore";
 import { THEME_MODES } from "@/constants/theme.constants";
 import { APP } from "@/constants/app.constants";
@@ -24,6 +25,7 @@ export function ProfilePage() {
   const signOut = useAuthStore((s) => s.signOut);
   const { mode, setMode } = useThemeStore();
   const wishlistCount = useWishlistCount();
+  const { customCake } = useBrandFeatures();
   const dark = mode === THEME_MODES.DARK;
   const [authOpen, setAuthOpen] = useState(false);
 
@@ -36,7 +38,7 @@ export function ProfilePage() {
     <>
       <TopBar large title="Profile" />
       <Page>
-        <PageSection className="space-y-5 pb-8 pt-1">
+        <PageSection className="mx-auto w-full space-y-5 pb-8 pt-1 md:max-w-2xl">
           <div className="flex items-center gap-4 px-1">
             <Avatar size="lg" name={customer?.name ?? null} />
             <div className="min-w-0">
@@ -73,6 +75,14 @@ export function ProfilePage() {
               }
               onClick={() => navigate(ROUTES.WISHLIST)}
             />
+            {customCake && (
+              <ListItem
+                icon={<CakeSlice className="h-5 w-5" />}
+                title="Custom cakes"
+                subtitle="Request a made-to-order cake"
+                onClick={() => navigate(ROUTES.CUSTOM_CAKE_REQUESTS)}
+              />
+            )}
           </ListGroup>
 
           <ListGroup header="Preferences">

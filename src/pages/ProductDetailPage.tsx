@@ -123,8 +123,10 @@ export function ProductDetailPage() {
   return (
     <>
       <Page>
+        {/* Two-column on laptop: hero left, details right. */}
+        <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-10 lg:pt-6">
         {/* Hero — tinted backdrop, floating actions, price badge */}
-        <div className="relative bg-primary/10 pb-6 pt-3">
+        <div className="relative bg-primary/10 pb-6 pt-3 lg:sticky lg:top-20 lg:rounded-[2.5rem] lg:pb-8">
           <div className="flex items-center justify-between px-4">
             <CircleButton label="Back" onClick={() => navigate(-1)}>
               <ChevronLeft className="h-5 w-5" strokeWidth={2.4} />
@@ -161,7 +163,7 @@ export function ProductDetailPage() {
           </div>
         </div>
 
-        <div className="px-4 pb-6 pt-4">
+        <div className="px-4 pb-6 pt-4 lg:px-0 lg:pt-0">
           {/* Name + veg + quantity */}
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
@@ -298,10 +300,11 @@ export function ProductDetailPage() {
             </div>
           )}
         </div>
+        </div>
       </Page>
 
       {/* Sticky CTA — tapping again keeps incrementing the cart line */}
-      <div className="relative border-t border-border/60 bg-background/95 px-4 pb-4 pt-3 backdrop-blur">
+      <div className="relative mx-auto w-full border-t border-border/60 bg-background/95 px-4 pb-4 pt-3 backdrop-blur md:max-w-md md:rounded-t-3xl md:border-x md:px-6 lg:max-w-lg">
         <AnimatePresence>
           {bursts > 0 && (
             <motion.span

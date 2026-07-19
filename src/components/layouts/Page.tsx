@@ -15,7 +15,9 @@ export function Page({ className, children, ...props }: HTMLAttributes<HTMLDivEl
       )}
       {...props}
     >
-      <div className="mx-auto flex w-full min-h-full flex-col lg:max-w-5xl lg:px-6">{children}</div>
+      <div className="mx-auto flex w-full min-h-full flex-col md:max-w-3xl md:px-6 lg:max-w-5xl xl:max-w-6xl">
+        {children}
+      </div>
     </div>
   );
 }

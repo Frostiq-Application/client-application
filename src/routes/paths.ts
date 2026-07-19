@@ -14,6 +14,9 @@ export const ROUTES = {
   ORDER_DETAIL: "/orders/:orderId",
   ADDRESSES: "/profile/addresses",
   WISHLIST: "/wishlist",
+  CUSTOM_CAKE: "/custom-cake",
+  CUSTOM_CAKE_REQUESTS: "/custom-cake/requests",
+  CUSTOM_CAKE_REQUEST_DETAIL: "/custom-cake/requests/:requestId",
   LOGIN: "/login",
 
   NOT_FOUND: "*",
@@ -24,4 +27,5 @@ export const buildPath = {
   category: (categoryId: string) => `/category/${categoryId}`,
   product: (productId: string) => `/product/${productId}`,
   order: (orderId: string) => `/orders/${orderId}`,
+  customCakeRequest: (requestId: string) => `/custom-cake/requests/${requestId}`,
 } as const;
