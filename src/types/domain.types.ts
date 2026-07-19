@@ -341,7 +341,14 @@ export interface SlotsResponse {
   date: string;
   open: boolean;
   closedReason: string | null;
-  slots: { start: string; end: string }[];
+  slots: {
+    start: string;
+    end: string;
+    /** False once the branch's per-slot capacity is exhausted. */
+    available: boolean;
+    /** Orders still bookable in this slot; null = unlimited. */
+    remaining: number | null;
+  }[];
 }
 
 // ---- Coupon validation ----

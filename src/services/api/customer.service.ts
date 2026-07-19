@@ -77,9 +77,18 @@ export const customerService = {
   ): Promise<CouponValidationResult> =>
     post(API_ENDPOINTS.validateCoupon, { shopId, code, subtotal }),
 
-  slots: (shopId: string, date: string, productIds?: string): Promise<SlotsResponse> =>
-    get(API_ENDPOINTS.slots, { params: { shopId, date, productIds } }),
+  slots: (
+    shopId: string,
+    date: string,
+    productIds?: string,
+    deliveryType?: "delivery" | "pickup",
+  ): Promise<SlotsResponse> =>
+    get(API_ENDPOINTS.slots, { params: { shopId, date, productIds, deliveryType } }),
 
-  availableDates: (shopId: string, productIds?: string): Promise<{ dates: string[] }> =>
-    get(API_ENDPOINTS.availableDates, { params: { shopId, productIds } }),
+  availableDates: (
+    shopId: string,
+    productIds?: string,
+    deliveryType?: "delivery" | "pickup",
+  ): Promise<{ dates: string[] }> =>
+    get(API_ENDPOINTS.availableDates, { params: { shopId, productIds, deliveryType } }),
 };

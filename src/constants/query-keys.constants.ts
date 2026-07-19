@@ -23,8 +23,10 @@ export const QK = {
   announcement: (shopId: string) => ["announcement", shopId] as const,
   occasions: (shopId: string) => ["occasions", shopId] as const,
 
-  slots: (shopId: string, date: string) => ["slots", shopId, date] as const,
-  availableDates: (shopId: string) => ["available-dates", shopId] as const,
+  slots: (shopId: string, date: string, deliveryType?: string) =>
+    ["slots", shopId, date, deliveryType ?? "all"] as const,
+  availableDates: (shopId: string, deliveryType?: string) =>
+    ["available-dates", shopId, deliveryType ?? "all"] as const,
 
   customCakeOptions: (shopId: string) => ["custom-cake", "options", shopId] as const,
   customCakeRequests: (shopId: string) => ["custom-cake", "requests", shopId] as const,
