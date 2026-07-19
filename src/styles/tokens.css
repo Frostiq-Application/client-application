@@ -1,0 +1,52 @@
+/**
+ * Design tokens — the single source of truth for color, radius and elevation.
+ * Values are HSL channels (H S% L%) so Tailwind can apply <alpha-value>.
+ * Brand accent (--primary) is overridden at runtime from the account theme_color;
+ * see src/lib/theme.ts.
+ */
+
+:root {
+  /* Neutral surfaces (light) */
+  --background: 0 0% 98%;
+  --foreground: 240 10% 8%;
+  --surface: 0 0% 100%;
+  --surface-2: 240 5% 96%;
+  --muted: 240 5% 92%;
+  --muted-foreground: 240 4% 46%;
+  --border: 240 6% 90%;
+  --input: 240 6% 90%;
+  --ring: var(--primary);
+
+  /* Brand accent — default Frosting pink, overridden per brand */
+  --primary: 336 84% 51%;
+  --primary-foreground: 0 0% 100%;
+
+  /* Semantic */
+  --success: 142 71% 40%;
+  --success-foreground: 0 0% 100%;
+  --warning: 38 92% 50%;
+  --warning-foreground: 30 40% 12%;
+  --danger: 0 72% 51%;
+  --danger-foreground: 0 0% 100%;
+
+  /* Radii */
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+}
+
+.dark {
+  --background: 240 10% 6%;
+  --foreground: 0 0% 96%;
+  --surface: 240 8% 10%;
+  --surface-2: 240 7% 14%;
+  --muted: 240 6% 18%;
+  --muted-foreground: 240 5% 65%;
+  --border: 240 6% 20%;
+  --input: 240 6% 22%;
+
+  --primary-foreground: 0 0% 100%;
+  --success: 142 60% 45%;
+  --warning: 38 92% 55%;
+  --danger: 0 72% 58%;
+}
