@@ -89,20 +89,27 @@ export function CheckoutPage() {
     addressId ?? addresses.find((a) => a.isDefault)?.id ?? addresses[0]?.id ?? null;
 
   const datesQuery = useQuery({
-    queryKey: [...QK.availableDates(cartShopId ?? ""), productIds],
-    queryFn: () => customerService.availableDates(cartShopId as string, productIds),
+    queryKey: [...QK.availableDates(cartShopId ?? "", deliveryType), productIds],
+    queryFn: () =>
+      customerService.availableDates(cartShopId as string, productIds, deliveryType),
     enabled: isAuthenticated && !!cartShopId,
   });
   const dates = datesQuery.data?.dates ?? [];
   const effectiveDate = date ?? dates[0] ?? null;
 
   const slotsQuery = useQuery({
-    queryKey: [...QK.slots(cartShopId ?? "", effectiveDate ?? ""), productIds],
+    queryKey: [...QK.slots(cartShopId ?? "", effectiveDate ?? "", deliveryType), productIds],
     queryFn: () =>
-      customerService.slots(cartShopId as string, effectiveDate as string, productIds),
+      customerService.slots(
+        cartShopId as string,
+        effectiveDate as string,
+        productIds,
+        deliveryType,
+      ),
     enabled: isAuthenticated && !!cartShopId && !!effectiveDate,
   });
-  const slots = slotsQuery.data?.slots ?? [];
+  // Fully booked slots are hidden from the picker rather than shown disabled.
+  const slots = (slotsQuery.data?.slots ?? []).filter((s) => s.available);
 
   const discount = coupon?.discount ?? 0;
   const total = Math.max(0, subtotal - discount);
@@ -193,7 +200,13 @@ export function CheckoutPage() {
             name="delivery-type"
             options={DELIVERY_OPTIONS}
             value={deliveryType}
-            onChange={setDeliveryType}
+            onChange={(v) => {
+              // Each branch can schedule delivery and pickup differently —
+              // a slot picked for one type may not exist for the other.
+              setDeliveryType(v);
+              setDate(null);
+              setSlot(null);
+            }}
             className="bg-surface shadow-card"
           />
 
