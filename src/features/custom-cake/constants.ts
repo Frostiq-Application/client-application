@@ -71,6 +71,69 @@ export const CUSTOM_CAKE_COPY = {
     "We've received your custom cake request. The bakery will review it and send you a quote shortly.",
 };
 
+/**
+ * The two ways to start a custom cake, shown on the entry chooser.
+ * `guided` walks the customer through the live menu (category → product →
+ * size); `describe` is the open-ended, image-first request.
+ */
+export const CUSTOM_CAKE_MODES = {
+  guided: {
+    key: "guided",
+    title: "Build from our menu",
+    subtitle: "Pick a cake you love, then make it yours",
+    blurb: "Browse categories and products, choose a size and flavour, then add your personal touch.",
+    badge: "Guided",
+    bullets: ["Start from a real cake", "Live sizes & prices", "Just a few taps"],
+  },
+  describe: {
+    key: "describe",
+    title: "Describe your dream cake",
+    subtitle: "Start from a photo or an idea",
+    blurb: "Share reference photos and tell us what you're imagining — we'll shape it into a quote.",
+    badge: "From scratch",
+    bullets: ["Upload inspiration", "Total creative freedom", "We quote it for you"],
+  },
+} as const;
+
+export const CUSTOM_CAKE_START_COPY = {
+  title: "Custom Cake",
+  heading: "How would you like to start?",
+  subheading: "Two ways to design your perfect cake — pick whichever feels easier.",
+  myRequests: "My requests",
+};
+
+/** Ordered steps of the guided (menu-based) builder. */
+export const GUIDED_STEPS = [
+  { key: "category", label: "Category" },
+  { key: "product", label: "Cake" },
+  { key: "configure", label: "Size" },
+  { key: "personalize", label: "Personalize" },
+  { key: "delivery", label: "Delivery" },
+  { key: "review", label: "Review" },
+] as const;
+
+export type GuidedStep = (typeof GUIDED_STEPS)[number]["key"];
+
+export const GUIDED_COPY = {
+  categoryTitle: "What's the occasion?",
+  categorySubtitle: "Pick a category to explore.",
+  allCategory: "All cakes",
+  productTitle: "Choose your base cake",
+  productSubtitle: "We'll customize it from here.",
+  productEmpty: "No cakes in this category yet — try another.",
+  configureTitle: "Size & flavour",
+  configureSubtitle: "Prices are a starting point — final quote comes after review.",
+  personalizeTitle: "Make it yours",
+  personalizeSubtitle: "Optional finishing touches.",
+  deliveryTitle: "When & where",
+  deliverySubtitle: "And how we reach you with the quote.",
+  reviewTitle: "Review your cake",
+  reviewSubtitle: "Looks good? Send it over and we'll get you a quote.",
+  basedOn: "Based on",
+  send: "Send request",
+  next: "Continue",
+};
+
 export const CUSTOM_CAKE_STATUS_LABEL: Record<CustomCakeStatus, string> = {
   submitted: "Submitted",
   under_review: "Under review",

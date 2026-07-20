@@ -15,6 +15,8 @@ export const ROUTES = {
   ADDRESSES: "/profile/addresses",
   WISHLIST: "/wishlist",
   CUSTOM_CAKE: "/custom-cake",
+  CUSTOM_CAKE_DESCRIBE: "/custom-cake/describe",
+  CUSTOM_CAKE_GUIDED: "/custom-cake/guided",
   CUSTOM_CAKE_REQUESTS: "/custom-cake/requests",
   CUSTOM_CAKE_REQUEST_DETAIL: "/custom-cake/requests/:requestId",
   LOGIN: "/login",

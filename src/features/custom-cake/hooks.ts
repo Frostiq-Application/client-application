@@ -1,6 +1,11 @@
+import { useCallback } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { QK } from "@/constants/query-keys.constants";
 import { customCakeService } from "@/services/api/customCake.service";
+import {
+  useCustomCakeStream,
+  type CustomCakeStreamEvent,
+} from "@/hooks/useCustomCakeStream";
 
 export function useCustomCakeOptions(shopId: string | null) {
   return useQuery({
@@ -28,7 +33,9 @@ export function useCustomCakeRequest(shopId: string | null, id: string) {
       : ["custom-cake", "request", "none", id],
     queryFn: () => customCakeService.request(shopId as string, id),
     enabled: !!shopId && !!id,
-    refetchInterval: 30_000,
+    // Live updates arrive over SSE (useCustomCakeRealtime); a slow poll is a
+    // backstop for missed frames / dropped connections.
+    refetchInterval: 60_000,
   });
 }
 
@@ -39,8 +46,39 @@ export function useCustomCakeEvents(shopId: string | null, id: string) {
       : ["custom-cake", "events", "none", id],
     queryFn: () => customCakeService.events(shopId as string, id),
     enabled: !!shopId && !!id,
-    refetchInterval: 30_000,
+    refetchInterval: 60_000,
   });
+}
+
+/**
+ * Subscribes to the realtime custom-cake stream for a branch and invalidates the
+ * affected request views as changes land. Optionally narrows to a single
+ * `requestId` (detail page) — the requests-list cache is always refreshed too.
+ */
+export function useCustomCakeRealtime(
+  shopId: string | null,
+  requestId?: string,
+) {
+  const qc = useQueryClient();
+  const onEvent = useCallback(
+    (e: CustomCakeStreamEvent) => {
+      if (!shopId) return;
+      if (requestId && e.requestId !== requestId) {
+        // Detail page: still keep the list fresh, skip the per-request refetch.
+        void qc.invalidateQueries({ queryKey: QK.customCakeRequests(shopId) });
+        return;
+      }
+      void qc.invalidateQueries({ queryKey: QK.customCakeRequests(shopId) });
+      void qc.invalidateQueries({
+        queryKey: QK.customCakeRequest(shopId, e.requestId),
+      });
+      void qc.invalidateQueries({
+        queryKey: QK.customCakeEvents(shopId, e.requestId),
+      });
+    },
+    [qc, shopId, requestId],
+  );
+  useCustomCakeStream(shopId, onEvent);
 }
 
 /** Accept or decline the bakery's quotation, then refresh the request views. */

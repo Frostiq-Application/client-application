@@ -38,8 +38,14 @@ const AddressesPage = lazy(() =>
 const WishlistPage = lazy(() =>
   import("@/pages/WishlistPage").then((m) => ({ default: m.WishlistPage })),
 );
+const CustomCakeStartPage = lazy(() =>
+  import("@/pages/CustomCakeStartPage").then((m) => ({ default: m.CustomCakeStartPage })),
+);
 const CustomCakePage = lazy(() =>
   import("@/pages/CustomCakePage").then((m) => ({ default: m.CustomCakePage })),
+);
+const CustomCakeGuidedPage = lazy(() =>
+  import("@/pages/CustomCakeGuidedPage").then((m) => ({ default: m.CustomCakeGuidedPage })),
 );
 const CustomCakeRequestsPage = lazy(() =>
   import("@/pages/CustomCakeRequestsPage").then((m) => ({
@@ -78,7 +84,9 @@ const router = createBrowserRouter([
       { path: ROUTES.ORDER_DETAIL, element: withSuspense(<OrderDetailPage />) },
       { path: ROUTES.ADDRESSES, element: withSuspense(<AddressesPage />) },
       { path: ROUTES.WISHLIST, element: withSuspense(<WishlistPage />) },
-      { path: ROUTES.CUSTOM_CAKE, element: withSuspense(<CustomCakePage />) },
+      { path: ROUTES.CUSTOM_CAKE, element: withSuspense(<CustomCakeStartPage />) },
+      { path: ROUTES.CUSTOM_CAKE_DESCRIBE, element: withSuspense(<CustomCakePage />) },
+      { path: ROUTES.CUSTOM_CAKE_GUIDED, element: withSuspense(<CustomCakeGuidedPage />) },
       {
         path: ROUTES.CUSTOM_CAKE_REQUESTS,
         element: withSuspense(<CustomCakeRequestsPage />),
