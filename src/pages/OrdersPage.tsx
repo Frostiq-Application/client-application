@@ -13,7 +13,9 @@ import { ErrorState } from "@/components/common/ErrorState";
 import { EmptyBoxArt } from "@/components/common/illustrations";
 import { AuthSheet } from "@/features/auth/components/AuthSheet";
 import { AUTH_COPY } from "@/features/auth/constants";
+import { OrderDetailSidebar } from "@/features/orders/components/OrderDetailSidebar";
 import { useAuthStore } from "@/store/authStore";
+import { useIsTabletUp } from "@/hooks/useMediaQuery";
 import { customerService } from "@/services/api/customer.service";
 import { QK } from "@/constants/query-keys.constants";
 import { ORDER_STATUS_LABEL, ORDER_STATUS_TONE } from "@/constants/status.constants";
@@ -25,6 +27,18 @@ export function OrdersPage() {
   const navigate = useNavigate();
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const [authOpen, setAuthOpen] = useState(false);
+  const isTabletUp = useIsTabletUp();
+  const [sidebarOrderId, setSidebarOrderId] = useState<string | null>(null);
+
+  // Tablet/laptop: open the order beside the list in a sidebar. Phone: push
+  // to the full-screen route as before.
+  const onOrderTap = (orderId: string) => {
+    if (isTabletUp) {
+      setSidebarOrderId(orderId);
+    } else {
+      navigate(buildPath.order(orderId));
+    }
+  };
 
   const ordersQuery = useQuery({
     queryKey: QK.orders,
@@ -65,8 +79,13 @@ export function OrdersPage() {
                   variants={listItem}
                   type="button"
                   whileTap={tapScale}
-                  onClick={() => navigate(buildPath.order(order.id))}
-                  className="flex w-full items-center gap-3 rounded-3xl bg-surface p-4 text-left shadow-card"
+                  onClick={() => onOrderTap(order.id)}
+                  aria-current={sidebarOrderId === order.id ? "true" : undefined}
+                  className={`flex w-full items-center gap-3 rounded-3xl p-4 text-left shadow-card transition-colors ${
+                    sidebarOrderId === order.id
+                      ? "bg-primary/8 ring-1 ring-primary/30"
+                      : "bg-surface"
+                  }`}
                 >
                   <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary/12 text-primary">
                     {order.deliveryType === "delivery" ? (
@@ -102,6 +121,8 @@ export function OrdersPage() {
         title={AUTH_COPY.PROFILE_TITLE}
         subtitle={AUTH_COPY.PROFILE_SUBTITLE}
       />
+
+      <OrderDetailSidebar orderId={sidebarOrderId} onClose={() => setSidebarOrderId(null)} />
     </>
   );
 }
