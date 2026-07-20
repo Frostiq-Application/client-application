@@ -14,6 +14,7 @@ import {
 } from "@/features/custom-cake/constants";
 import {
   useCustomCakeEvents,
+  useCustomCakeRealtime,
   useCustomCakeRequest,
   useRespondToQuote,
 } from "@/features/custom-cake/hooks";
@@ -48,6 +49,7 @@ export function CustomCakeRequestDetailPage() {
   );
   const { data: events } = useCustomCakeEvents(shopId, requestId);
   const respond = useRespondToQuote(shopId, requestId);
+  useCustomCakeRealtime(shopId, requestId);
 
   const [declineOpen, setDeclineOpen] = useState(false);
   const [declineNote, setDeclineNote] = useState("");

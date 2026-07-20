@@ -9,7 +9,10 @@ import {
   CUSTOM_CAKE_STATUS_LABEL,
   CUSTOM_CAKE_STATUS_TONE,
 } from "@/features/custom-cake/constants";
-import { useMyCustomCakeRequests } from "@/features/custom-cake/hooks";
+import {
+  useCustomCakeRealtime,
+  useMyCustomCakeRequests,
+} from "@/features/custom-cake/hooks";
 import { useSelectedBranch } from "@/hooks/useStorefront";
 import { buildPath, ROUTES } from "@/routes/paths";
 import { formatDate } from "@/utils/format";
@@ -19,6 +22,7 @@ export function CustomCakeRequestsPage() {
   const { branch, isLoading: brandLoading } = useSelectedBranch();
   const shopId = branch?.id ?? null;
   const { data: requests, isLoading } = useMyCustomCakeRequests(shopId);
+  useCustomCakeRealtime(shopId);
 
   if (brandLoading || isLoading) return <LoadingScreen />;
 
