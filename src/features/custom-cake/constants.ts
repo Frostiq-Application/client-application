@@ -1,15 +1,26 @@
 import type { CustomCakeStatus } from "@/types/domain.types";
 
-/** Steps of the custom cake request wizard, in order. */
+/**
+ * Steps of the custom cake request wizard, in order. Image-first: the customer
+ * shares their inspiration up front, the detail pills are one optional step,
+ * and the flow ends on delivery + contact where the request is sent.
+ */
 export const CUSTOM_CAKE_STEPS = [
-  { key: "cake", label: "Cake" },
-  { key: "flavour", label: "Flavour" },
-  { key: "appearance", label: "Design" },
+  { key: "inspiration", label: "Inspiration" },
+  { key: "details", label: "Details" },
   { key: "delivery", label: "Delivery" },
-  { key: "review", label: "Review" },
 ] as const;
 
 export type CustomCakeStep = (typeof CUSTOM_CAKE_STEPS)[number]["key"];
+
+/** Subsections shown within the single (optional) "Details" step. */
+export const DETAIL_GROUPS = [
+  { key: "size", title: "Size & shape" },
+  { key: "flavour", title: "Flavour" },
+  { key: "look", title: "Look & feel" },
+] as const;
+
+export type DetailGroup = (typeof DETAIL_GROUPS)[number]["key"];
 
 /** Single-select option fields → the request property they fill. */
 export const SELECT_FIELDS: {
@@ -27,19 +38,19 @@ export const SELECT_FIELDS: {
     | "flavour"
     | "colour"
     | "topper";
-  step: CustomCakeStep;
+  group: DetailGroup;
 }[] = [
-  { field: "cake_type", label: "Cake type", prop: "cakeType", step: "cake" },
-  { field: "weight", label: "Weight", prop: "weight", step: "cake" },
-  { field: "shape", label: "Shape", prop: "shape", step: "cake" },
-  { field: "occasion", label: "Occasion", prop: "occasion", step: "cake" },
-  { field: "theme", label: "Theme", prop: "theme", step: "cake" },
-  { field: "sponge", label: "Sponge", prop: "sponge", step: "flavour" },
-  { field: "cream", label: "Cream", prop: "cream", step: "flavour" },
-  { field: "filling", label: "Filling", prop: "filling", step: "flavour" },
-  { field: "flavour", label: "Flavour", prop: "flavour", step: "flavour" },
-  { field: "colour", label: "Colour", prop: "colour", step: "appearance" },
-  { field: "topper", label: "Topper", prop: "topper", step: "appearance" },
+  { field: "cake_type", label: "Cake type", prop: "cakeType", group: "size" },
+  { field: "weight", label: "Weight", prop: "weight", group: "size" },
+  { field: "shape", label: "Shape", prop: "shape", group: "size" },
+  { field: "sponge", label: "Sponge", prop: "sponge", group: "flavour" },
+  { field: "cream", label: "Cream", prop: "cream", group: "flavour" },
+  { field: "filling", label: "Filling", prop: "filling", group: "flavour" },
+  { field: "flavour", label: "Flavour", prop: "flavour", group: "flavour" },
+  { field: "occasion", label: "Occasion", prop: "occasion", group: "look" },
+  { field: "theme", label: "Theme", prop: "theme", group: "look" },
+  { field: "colour", label: "Colour", prop: "colour", group: "look" },
+  { field: "topper", label: "Topper", prop: "topper", group: "look" },
 ];
 
 export const MAX_REFERENCE_IMAGES = 5;
@@ -51,6 +62,10 @@ export const CUSTOM_CAKE_COPY = {
     "Tell us about your dream cake and we'll send you a quote. Flavour, design, reference photos, delivery — all in a few taps.",
   start: "Start a request",
   myRequests: "My requests",
+  inspirationTitle: "Show us your dream cake",
+  inspirationSubtitle: "Share a photo or two — a screenshot, a Pinterest pin, anything.",
+  addDetails: "Add details",
+  skipToSend: "Skip — just send my photo",
   submitted: "Request sent!",
   submittedBody:
     "We've received your custom cake request. The bakery will review it and send you a quote shortly.",
