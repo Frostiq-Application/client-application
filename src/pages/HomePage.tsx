@@ -57,12 +57,14 @@ export function HomePage() {
   const products = useMemo(() => catalogQuery.data?.products ?? [], [catalogQuery.data]);
   const categories = useMemo(() => catalogQuery.data?.categories ?? [], [catalogQuery.data]);
 
-  // Each category chip is backed by the first product photo in that category.
+  // Each category chip prefers its own admin-set image, falling back to the
+  // first product photo in that category when none is set.
   const imageByCategory = useMemo(() => {
     const map: Record<string, string | undefined> = {};
     for (const category of categories) {
-      map[category.id] = products.find((p) => p.categoryId === category.id && p.images[0])
-        ?.images[0];
+      map[category.id] =
+        category.imageUrl ??
+        products.find((p) => p.categoryId === category.id && p.images[0])?.images[0];
     }
     return map;
   }, [categories, products]);

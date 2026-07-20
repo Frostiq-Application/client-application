@@ -174,6 +174,7 @@ export interface Product {
 export interface Category {
   id: string;
   name: string;
+  imageUrl: string | null;
   sortOrder: number;
 }
 
@@ -293,6 +294,7 @@ export interface Coupon {
 export interface OrderItemAddon {
   name: string;
   price: string;
+  imageUrl: string | null;
 }
 
 export interface OrderItem {
@@ -303,6 +305,7 @@ export interface OrderItem {
   quantity: number;
   unitPrice: string;
   lineTotal: string;
+  imageUrl: string | null;
   addons: OrderItemAddon[];
 }
 

@@ -18,6 +18,12 @@ http.interceptors.request.use((config) => {
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
+  // Let the browser set "multipart/form-data; boundary=..." itself — the
+  // instance-level "application/json" default would otherwise stop axios
+  // from serializing FormData bodies (e.g. file uploads) correctly.
+  if (config.data instanceof FormData) {
+    delete config.headers["Content-Type"];
+  }
   return config;
 });
 
