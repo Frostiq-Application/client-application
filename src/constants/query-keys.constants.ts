@@ -22,6 +22,7 @@ export const QK = {
   banners: (shopId: string) => ["banners", shopId] as const,
   announcement: (shopId: string) => ["announcement", shopId] as const,
   occasions: (shopId: string) => ["occasions", shopId] as const,
+  brandContent: (appSlug: string) => ["brand-content", appSlug] as const,
 
   slots: (shopId: string, date: string, deliveryType?: string) =>
     ["slots", shopId, date, deliveryType ?? "all"] as const,
