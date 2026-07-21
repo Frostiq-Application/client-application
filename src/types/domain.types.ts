@@ -220,6 +220,16 @@ export interface Occasion {
   productIds: string[];
 }
 
+/** Brand-level CMS content (tagline, about, social links) — GET /cms/storefront/brand/:appSlug/content. */
+export interface BrandContent {
+  accountId: string;
+  tagline: string | null;
+  aboutText: string | null;
+  instagramUrl: string | null;
+  facebookUrl: string | null;
+  whatsappUrl: string | null;
+}
+
 // ---- Customer & addresses ----
 
 export interface CustomerProfile {
