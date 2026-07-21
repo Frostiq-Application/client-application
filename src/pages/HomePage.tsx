@@ -9,8 +9,10 @@ import {
   useAnnouncement,
   useBanners,
   useBrand,
+  useBrandContent,
   useBrandFeatures,
   useCatalog,
+  useOccasions,
   usePublicCoupons,
   useSelectedBranch,
 } from "@/hooks/useStorefront";
@@ -22,6 +24,8 @@ import type { Product } from "@/types/domain.types";
 import { AnnouncementBar } from "@/features/home/components/AnnouncementBar";
 import { BannerCarousel } from "@/features/home/components/BannerCarousel";
 import { BranchSheet } from "@/features/home/components/BranchSheet";
+import { BrandFooter } from "@/features/home/components/BrandFooter";
+import { OccasionSections } from "@/features/home/components/OccasionSections";
 import { ALL_CATEGORIES, CategoryChips } from "@/features/home/components/CategoryChips";
 import { CollapsedHeader } from "@/features/home/components/CollapsedHeader";
 import { CouponRail } from "@/features/home/components/CouponRail";
@@ -44,6 +48,8 @@ export function HomePage() {
   const bannersQuery = useBanners(shopId);
   const announcementQuery = useAnnouncement(shopId);
   const couponsQuery = usePublicCoupons(shopId);
+  const occasionsQuery = useOccasions(shopId);
+  const brandContentQuery = useBrandContent();
 
   const [branchSheetOpen, setBranchSheetOpen] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState<string>(ALL_CATEGORIES);
@@ -151,6 +157,14 @@ export function HomePage() {
               </>
             )}
 
+            {/* CMS-curated featured products, grouped by occasion. */}
+            <OccasionSections
+              occasions={occasionsQuery.data ?? []}
+              products={products}
+              onTap={onProductTap}
+              onAdd={onQuickAdd}
+            />
+
             {visibleProducts.length > 0 ? (
               <>
                 <SectionHeader title={HOME_COPY.MOST_ORDERED} action={<ExploreAll onTap={() => navigate(ROUTES.SEARCH)} />} />
@@ -173,6 +187,12 @@ export function HomePage() {
                 description={HOME_COPY.EMPTY_CATALOG_DESC}
               />
             )}
+
+            <BrandFooter
+              content={brandContentQuery.data}
+              brandName={brandQuery.data?.name}
+              logoUrl={brandQuery.data?.logoUrl}
+            />
           </>
         )}
       </Page>
