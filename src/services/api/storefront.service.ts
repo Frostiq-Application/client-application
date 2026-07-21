@@ -6,6 +6,7 @@ import type {
   Announcement,
   Banner,
   Brand,
+  BrandContent,
   Branch,
   BranchCatalog,
   Coupon,
@@ -51,6 +52,9 @@ export const storefrontService = {
     get(API_ENDPOINTS.announcement(shopId)),
 
   getOccasions: (shopId: string): Promise<Occasion[]> => get(API_ENDPOINTS.occasions(shopId)),
+
+  getBrandContent: (appSlug: string): Promise<BrandContent> =>
+    get(API_ENDPOINTS.brandContent(appSlug)),
 
   getPublicCoupons: (shopId: string): Promise<Coupon[]> =>
     get(API_ENDPOINTS.publicCoupons(shopId)),
