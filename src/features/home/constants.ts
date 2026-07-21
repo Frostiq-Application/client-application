@@ -25,6 +25,8 @@ export const HOME_COPY = {
   SEE_ALL: "See all",
   EMPTY_CATALOG_TITLE: "The oven is warming up",
   EMPTY_CATALOG_DESC: "This branch hasn't added any products yet. Check back soon!",
+  ABOUT_TITLE: "About us",
+  FOLLOW_US: "Follow us",
 } as const;
 
 /** Rotating search-bar suggestions (Blinkit-style animated placeholder). */
