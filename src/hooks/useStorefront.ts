@@ -121,6 +121,35 @@ export function usePublicCoupons(shopId: string | null) {
   });
 }
 
+/**
+ * Occasions with their featured product ids for a branch (CMS "featured
+ * products" — Birthday, Anniversary, etc.). The caller resolves the ids against
+ * the loaded catalog, so no extra product fetch is needed.
+ */
+export function useOccasions(shopId: string | null) {
+  return useQuery({
+    queryKey: QK.occasions(shopId ?? ""),
+    queryFn: () => storefrontService.getOccasions(shopId as string),
+    enabled: !!shopId,
+    staleTime: 5 * 60_000,
+  });
+}
+
+/**
+ * Brand-level CMS content (tagline, about, social links). Keyed by the brand's
+ * appSlug, which comes from the resolved brand — so it waits for the brand.
+ */
+export function useBrandContent() {
+  const { data: brand } = useBrand();
+  const appSlug = brand?.appSlug ?? null;
+  return useQuery({
+    queryKey: QK.brandContent(appSlug ?? ""),
+    queryFn: () => storefrontService.getBrandContent(appSlug as string),
+    enabled: !!appSlug,
+    staleTime: 5 * 60_000,
+  });
+}
+
 /** Effective announcement bar for a branch (may be null). */
 export function useAnnouncement(shopId: string | null) {
   return useQuery({
