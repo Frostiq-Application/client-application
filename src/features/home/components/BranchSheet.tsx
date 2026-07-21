@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { LocateFixed, MapPin, Store } from "lucide-react";
 import { Sheet } from "@/components/ui/Sheet";
 import { Badge } from "@/components/ui/Badge";
@@ -27,7 +27,11 @@ export function BranchSheet({ open, onClose, required }: BranchSheetProps) {
 
   const branches = brand?.branches ?? [];
 
-  const locate = () => {
+  /**
+   * @param silent suppress the error toast — used by the automatic first-open
+   *   request, where a denied permission shouldn't nag the customer.
+   */
+  const locate = (silent = false) => {
     if (!navigator.geolocation) return;
     setLocating(true);
     navigator.geolocation.getCurrentPosition(
@@ -37,11 +41,23 @@ export function BranchSheet({ open, onClose, required }: BranchSheetProps) {
       },
       () => {
         setLocating(false);
-        toast.error("Couldn't get your location");
+        if (!silent) toast.error("Couldn't get your location");
       },
       { timeout: 8000 },
     );
   };
+
+  // First-visit: the sheet opens forced (required) with no branch chosen yet, so
+  // prompt for location once to sort branches nearest-first automatically. Guarded
+  // so it fires a single time per mount — not on every open or manual re-open.
+  const autoLocated = useRef(false);
+  useEffect(() => {
+    if (open && required && !geo && !autoLocated.current) {
+      autoLocated.current = true;
+      locate(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, required]);
 
   return (
     <Sheet
@@ -51,7 +67,7 @@ export function BranchSheet({ open, onClose, required }: BranchSheetProps) {
       dismissible={!required}
     >
       <div className="space-y-3 pt-1">
-        <Button variant="secondary" size="sm" block loading={locating} onClick={locate}>
+        <Button variant="secondary" size="sm" block loading={locating} onClick={() => locate()}>
           <LocateFixed className="h-4 w-4" />
           {locating ? HOME_COPY.LOCATING : HOME_COPY.USE_MY_LOCATION}
         </Button>
