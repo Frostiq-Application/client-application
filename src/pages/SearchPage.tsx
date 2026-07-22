@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
-import { CakeSlice, History, SlidersVertical, TrendingUp } from "lucide-react";
+import { CakeSlice, History, SlidersVertical, TrendingUp, X } from "lucide-react";
 import { TopBar } from "@/components/navigation/TopBar";
 import { Page, PageSection } from "@/components/layouts/Page";
 import { SearchBar } from "@/components/ui/SearchBar";
@@ -27,10 +27,10 @@ import {
 } from "@/features/home/constants";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useRotatingIndex } from "@/hooks/useRotatingIndex";
-import { useSelectedBranch } from "@/hooks/useStorefront";
+import { useCatalog, useSelectedBranch } from "@/hooks/useStorefront";
 import { storefrontService } from "@/services/api/storefront.service";
 import { QK } from "@/constants/query-keys.constants";
-import { buildPath } from "@/routes/paths";
+import { SEARCH_CATEGORY_PARAM, buildPath } from "@/routes/paths";
 import { minPrice } from "@/utils/product";
 import { cn } from "@/lib/cn";
 import { tapScale } from "@/animations/variants";
@@ -39,8 +39,10 @@ const MIN_QUERY_LENGTH = 2;
 
 export function SearchPage() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const categoryParam = searchParams.get(SEARCH_CATEGORY_PARAM) ?? "";
   const [query, setQuery] = useState("");
-  const [filters, setFilters] = useState<SearchFilters>(DEFAULT_FILTERS);
+  const [sheetFilters, setSheetFilters] = useState<SearchFilters>(DEFAULT_FILTERS);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const cartCount = useCartCount();
@@ -48,9 +50,33 @@ export function SearchPage() {
   const { branch } = useSelectedBranch();
   const shopId = branch?.id ?? null;
   const { recent, save, clear } = useRecentSearches();
+  const { data: catalog } = useCatalog(shopId);
+
+  // ?category= is the single source of truth for the category filter — that way
+  // a home chip tapped while this page is already mounted still re-filters, and
+  // back/forward walks the filter history. The sheet owns the rest.
+  const filters = useMemo<SearchFilters>(
+    () => ({ ...sheetFilters, categoryId: categoryParam }),
+    [sheetFilters, categoryParam],
+  );
+
+  const applyFilters = (next: SearchFilters) => {
+    setSheetFilters(next);
+    setSearchParams(next.categoryId ? { [SEARCH_CATEGORY_PARAM]: next.categoryId } : {}, {
+      replace: true,
+    });
+  };
+
+  const activeCategory = useMemo(
+    () => catalog?.categories.find((c) => c.id === filters.categoryId) ?? null,
+    [catalog, filters.categoryId],
+  );
 
   const filtersActive =
-    filters.type !== "" || filters.egglessOnly || filters.sort !== "recommended";
+    filters.categoryId !== "" ||
+    filters.type !== "" ||
+    filters.egglessOnly ||
+    filters.sort !== "recommended";
 
   // Filters alone (without a query) are also a valid search.
   const enabled = !!shopId && (debounced.length >= MIN_QUERY_LENGTH || filtersActive);
@@ -58,12 +84,14 @@ export function SearchPage() {
   const searchQuery = useQuery({
     queryKey: QK.products(shopId ?? "", {
       search: debounced,
+      categoryId: filters.categoryId,
       type: filters.type,
       eggless: filters.egglessOnly,
     }),
     queryFn: () =>
       storefrontService.browseProducts(shopId as string, {
         search: debounced.length >= MIN_QUERY_LENGTH ? debounced : undefined,
+        categoryId: filters.categoryId || undefined,
         productType: filters.type || undefined,
         isEggless: filters.egglessOnly || undefined,
         limit: 30,
@@ -120,6 +148,22 @@ export function SearchPage() {
             </motion.button>
           </form>
 
+          {/* Active category (usually pushed from a home chip) — tap to clear. */}
+          {activeCategory && (
+            <motion.button
+              type="button"
+              initial={{ opacity: 0, y: -4 }}
+              animate={{ opacity: 1, y: 0 }}
+              whileTap={tapScale}
+              onClick={() => applyFilters({ ...filters, categoryId: "" })}
+              aria-label={SEARCH_COPY.CLEAR_CATEGORY}
+              className="mt-3 flex h-9 items-center gap-1.5 rounded-full bg-primary px-3.5 text-[13px] font-bold text-primary-foreground"
+            >
+              {activeCategory.name}
+              <X className="h-3.5 w-3.5" strokeWidth={2.6} />
+            </motion.button>
+          )}
+
           {!enabled ? (
             <div className="pt-5">
               {recent.length > 0 && (
@@ -171,7 +215,9 @@ export function SearchPage() {
             <EmptyState
               icon={<EmptyBoxArt className="h-16 w-16" />}
               title={SEARCH_COPY.EMPTY_TITLE}
-              description={SEARCH_COPY.EMPTY_DESC(debounced || SEARCH_COPY.FILTERS)}
+              description={SEARCH_COPY.EMPTY_DESC(
+                debounced || activeCategory?.name || SEARCH_COPY.FILTERS,
+              )}
             />
           ) : (
             <>
@@ -215,7 +261,8 @@ export function SearchPage() {
         open={filtersOpen}
         onClose={() => setFiltersOpen(false)}
         value={filters}
-        onApply={setFilters}
+        categories={catalog?.categories ?? []}
+        onApply={applyFilters}
       />
     </>
   );
