@@ -18,6 +18,10 @@ export const HOME_COPY = {
   NO_NOTIFICATIONS: "No new notifications",
   OPEN_NOW: "Open now",
   CLOSED_NOW: "Closed",
+  NEAREST: "Nearest",
+  NEAREST_PICKED: "Switched to your nearest branch:",
+  NO_BRANCHES_TITLE: "No branches yet",
+  NO_BRANCHES_DESC: "This brand hasn't opened any outlets for online ordering yet.",
   USE_MY_LOCATION: "Use my location",
   LOCATING: "Locating…",
   EGGLESS: "Eggless",
@@ -55,4 +59,3 @@ export function getGreeting(hour: number): string {
   if (hour < 17) return GREETINGS.AFTERNOON;
   return GREETINGS.EVENING;
 }
-
