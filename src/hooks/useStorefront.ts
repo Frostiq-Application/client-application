@@ -1,21 +1,32 @@
 import { useEffect, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { env } from "@/config/env";
 import { QK } from "@/constants/query-keys.constants";
 import { applyBrandTheme } from "@/lib/theme";
-import { storefrontService, type GeoPoint } from "@/services/api/storefront.service";
+import { storefrontService } from "@/services/api/storefront.service";
 import { useBranchStore } from "@/store/branchStore";
+import { useGeoStore } from "@/store/geoStore";
 import type { Branch } from "@/types/domain.types";
 
 /**
  * Loads the brand for this white-label instance's tenant (VITE_TENANT_ID) and
  * applies its accent color to the app theme as soon as it arrives.
+ *
+ * Coordinates come from the shared geo store rather than an argument, so every
+ * caller reads the same cache entry. Passing geo per-component forked the cache:
+ * the branch sheet fetched a geo-keyed copy the rest of the app never saw, and
+ * its own list blanked out on every key change.
  */
-export function useBrand(geo?: GeoPoint) {
+export function useBrand() {
+  const geo = useGeoStore((s) => s.geo);
+
   const query = useQuery({
     queryKey: [...QK.brand(env.tenantId), geo ?? null],
-    queryFn: () => storefrontService.getBrand(env.tenantId, geo),
+    queryFn: () => storefrontService.getBrand(env.tenantId, geo ?? undefined),
     staleTime: 5 * 60_000,
+    // Location arriving changes the key; keep showing the geo-less branches
+    // instead of an empty list while the sorted copy is in flight.
+    placeholderData: keepPreviousData,
   });
 
   const themeColor = query.data?.themeColor;
