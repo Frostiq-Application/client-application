@@ -10,21 +10,24 @@ import {
   TYPE_OPTIONS,
   type SearchFilters,
 } from "../constants";
+import type { Category } from "@/types/domain.types";
 
 export interface FilterSheetProps {
   open: boolean;
   onClose: () => void;
   value: SearchFilters;
+  categories: Category[];
   onApply: (filters: SearchFilters) => void;
 }
 
-/** Search filters: product type, eggless-only, price sort. */
-export function FilterSheet({ open, onClose, value, onApply }: FilterSheetProps) {
+/** Search filters: category, product type, eggless-only, price sort. */
+export function FilterSheet({ open, onClose, value, categories, onApply }: FilterSheetProps) {
   return (
     <Sheet open={open} onClose={onClose} title={SEARCH_COPY.FILTERS}>
       {/* Sheet unmounts its children when closed, so the draft re-seeds per open. */}
       <FilterForm
         initial={value}
+        categories={categories}
         onApply={(f) => {
           onApply(f);
           onClose();
@@ -36,9 +39,11 @@ export function FilterSheet({ open, onClose, value, onApply }: FilterSheetProps)
 
 function FilterForm({
   initial,
+  categories,
   onApply,
 }: {
   initial: SearchFilters;
+  categories: Category[];
   onApply: (filters: SearchFilters) => void;
 }) {
   const [draft, setDraft] = useState<SearchFilters>(initial);
@@ -48,6 +53,33 @@ function FilterForm({
 
   return (
     <div className="space-y-5 pt-1">
+        {categories.length > 0 && (
+          <section>
+            <h3 className="text-sm font-extrabold">{SEARCH_COPY.CATEGORY}</h3>
+            <div className="mt-2.5 flex flex-wrap gap-2">
+              {[{ id: "", name: SEARCH_COPY.ALL_CATEGORIES }, ...categories].map((category) => {
+                const active = draft.categoryId === category.id;
+                return (
+                  <button
+                    key={category.id || "all"}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => setDraft((d) => ({ ...d, categoryId: category.id }))}
+                    className={cn(
+                      "h-10 rounded-full px-4 text-sm font-bold transition-colors",
+                      active
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-surface-2 text-foreground",
+                    )}
+                  >
+                    {category.name}
+                  </button>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
         <section>
           <h3 className="text-sm font-extrabold">{SEARCH_COPY.TYPE}</h3>
           <div className="mt-2.5 flex flex-wrap gap-2">
