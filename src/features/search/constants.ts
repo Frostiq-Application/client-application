@@ -8,6 +8,9 @@ export const SEARCH_COPY = {
   CLEAR: "Clear",
   POPULAR: "Popular right now",
   FILTERS: "Filters",
+  CATEGORY: "Category",
+  ALL_CATEGORIES: "All",
+  CLEAR_CATEGORY: "Clear category filter",
   TYPE: "Type",
   EGGLESS_ONLY: "Eggless only",
   SORT: "Sort by",
@@ -42,12 +45,15 @@ export const SORT_OPTIONS = [
 export type SortValue = (typeof SORT_OPTIONS)[number]["value"];
 
 export interface SearchFilters {
+  /** Catalog category id — "" means every category. */
+  categoryId: string;
   type: ProductType | "";
   egglessOnly: boolean;
   sort: SortValue;
 }
 
 export const DEFAULT_FILTERS: SearchFilters = {
+  categoryId: "",
   type: "",
   egglessOnly: false,
   sort: "recommended",
