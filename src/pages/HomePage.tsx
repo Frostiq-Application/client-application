@@ -52,7 +52,6 @@ export function HomePage() {
   const brandContentQuery = useBrandContent();
 
   const [branchSheetOpen, setBranchSheetOpen] = useState(false);
-  const [categoryFilter, setCategoryFilter] = useState<string>(ALL_CATEGORIES);
   const [collapsed, setCollapsed] = useState(false);
 
   // Show the compact address+search bar once the hero scrolls out of view.
@@ -75,17 +74,13 @@ export function HomePage() {
     return map;
   }, [categories, products]);
 
-  const visibleProducts = useMemo(
-    () =>
-      categoryFilter === ALL_CATEGORIES
-        ? products
-        : products.filter((p) => p.categoryId === categoryFilter),
-    [products, categoryFilter],
-  );
-
   const featured = useMemo(() => products.filter((p) => p.isFeatured), [products]);
 
   const onProductTap = (product: Product) => navigate(buildPath.product(product.id));
+
+  // Category chips hand off to Search, pre-filtered to the tapped category.
+  const onCategoryTap = (categoryId: string) =>
+    navigate(categoryId === ALL_CATEGORIES ? ROUTES.SEARCH : buildPath.search(categoryId));
 
   const onQuickAdd = (product: Product) => {
     const result = quickAdd(product);
@@ -129,8 +124,7 @@ export function HomePage() {
             <CategoryChips
               categories={categories}
               imageByCategory={imageByCategory}
-              value={categoryFilter}
-              onChange={setCategoryFilter}
+              onSelect={onCategoryTap}
             />
 
             <div className="pt-2">
@@ -165,11 +159,11 @@ export function HomePage() {
               onAdd={onQuickAdd}
             />
 
-            {visibleProducts.length > 0 ? (
+            {products.length > 0 ? (
               <>
                 <SectionHeader title={HOME_COPY.MOST_ORDERED} action={<ExploreAll onTap={() => navigate(ROUTES.SEARCH)} />} />
                 <div className="grid grid-cols-2 gap-3 px-4 pb-8 md:grid-cols-3 lg:grid-cols-4 lg:gap-4">
-                  {visibleProducts.map((product, index) => (
+                  {products.map((product, index) => (
                     <ProductCard
                       key={product.id}
                       product={product}
