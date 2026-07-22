@@ -24,9 +24,15 @@ export const ROUTES = {
   NOT_FOUND: "*",
 } as const;
 
+/** Query param the Search screen reads its category filter from. */
+export const SEARCH_CATEGORY_PARAM = "category";
+
 /** Path builders for parameterized routes. */
 export const buildPath = {
   category: (categoryId: string) => `/category/${categoryId}`,
+  /** Search screen pre-filtered to one category (home category chips). */
+  search: (categoryId: string) =>
+    `${ROUTES.SEARCH}?${SEARCH_CATEGORY_PARAM}=${encodeURIComponent(categoryId)}`,
   product: (productId: string) => `/product/${productId}`,
   order: (orderId: string) => `/orders/${orderId}`,
   customCakeRequest: (requestId: string) => `/custom-cake/requests/${requestId}`,
